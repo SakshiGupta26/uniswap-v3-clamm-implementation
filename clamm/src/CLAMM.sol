@@ -10,6 +10,19 @@ contract CLAMM {
     int24 public immutable tickSpacing;
     uint128 public immutable maxLiquidityPerTick;
 
+    event Initialize(uint160 sqrtPriceX96, int24 tick);
+
+
+    
+    struct Slot0 {
+       //20+3+2+2+2+1+1
+       uint160 sqrtPriceX96;
+       int24 tick;
+       bool unlocked;
+    }
+    
+    Slot0 public slot0;
+
     constructor(
         address _token0,
         address _token1,
@@ -23,5 +36,16 @@ contract CLAMM {
 
         maxLiquidityPerTick =
             Tick.tickSpacingToMaxLiquidityPerTick(_tickSpacing);
+    }
+  function initialize(uint160 sqrtPriceX96){
+        require(slot0.sqrtPriceX96 == 0,"already initialized");
+        int24 tick = TickMath.getTickAtSqrtRatio(sqrtPriceX96);
+        slot0 = Slot0({
+            sqrtPriceX96: sqrtPriceX96,
+            tick:tick,
+             unlocked:true
+        });
+        
+        emit Initialize(sqrtPriceX96,tick);
     }
 }
