@@ -48,4 +48,13 @@ contract CLAMM {
         
         emit Initialize(sqrtPriceX96,tick);
     }
+      function mint(
+        address recipient,
+        int24 tickLower,
+        int24 tickUpper,
+        uint128 amount,
+        bytes calldata data
+    ) external override lock returns (uint256 amount0, uint256 amount1) {
+        
+    }
 }
